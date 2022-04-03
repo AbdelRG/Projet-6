@@ -10,4 +10,7 @@ router.post(
   multerMiddleware,
   sauceController.setSauce
 );
+
+router.get("/sauces", authenticateToken, sauceController.getAllSauces);
+router.get("/sauces/:id", authenticateToken, sauceController.getSauceById);
 module.exports = router;

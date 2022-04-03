@@ -1,9 +1,11 @@
 const sauceModel = require("../models/sauceModel");
 const jwt = require("jsonwebtoken");
+const { json } = require("express");
+const ObjectID = require("mongoose").Types.ObjectId;
 
 module.exports.setSauce = async (req, res) => {
-  console.log("test");
-  const { name, manufacturer, description, mainPepper, heat } = req.body;
+  const sauce = JSON.parse(req.body.sauce);
+  const { name, manufacturer, description, mainPepper, heat } = sauce;
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
@@ -27,4 +29,20 @@ module.exports.setSauce = async (req, res) => {
   } catch (err) {
     res.status(400).send(err);
   }
+};
+
+module.exports.getAllSauces = async (req, res) => {
+  const sauces = await sauceModel.find();
+
+  res.status(200).send(sauces);
+};
+
+module.exports.getSauceById = (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown :" + req.params.id);
+
+  sauceModel.findById(req.params.id, (err, docs) => {
+    if (!err) res.send(docs);
+    else console.log("ID unknown :" + err);
+  });
 };
