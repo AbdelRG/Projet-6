@@ -46,3 +46,42 @@ module.exports.getSauceById = (req, res) => {
     else console.log("ID unknown :" + err);
   });
 };
+
+module.exports.updateSauce = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown :" + req.params.id);
+  console.log(req.body);
+  const { name, manufacturer, description, mainPepper, heat } = req.body;
+  //const imageUrl = req.file.path;
+  try {
+    await sauceModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: name,
+        manufacturer: manufacturer,
+        description: description,
+        mainPepper: mainPepper,
+        heat: heat,
+        //imageUrl: imageUrl,
+      },
+      (err, data) => {
+        if (err) res.status(400).send(err);
+        else res.status(201).json({ message: "sauce mis a jour" });
+      }
+    );
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+module.exports.deleteSauce = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown :" + req.params.id);
+  try {
+    await sauceModel.deleteOne(req.params.id, function (err) {
+      if (!err) res.status(201).json({ message: "sauce supprimer" });
+    });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};

@@ -13,4 +13,6 @@ router.post(
 
 router.get("/sauces", authenticateToken, sauceController.getAllSauces);
 router.get("/sauces/:id", authenticateToken, sauceController.getSauceById);
+router.put("/sauces/:id", authenticateToken, sauceController.updateSauce);
+router.delete("/sauces/:id", authenticateToken, sauceController.deleteSauce);
 module.exports = router;

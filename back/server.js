@@ -6,12 +6,12 @@ require("./config/db");
 
 const cors = require("cors");
 const app = express();
-app.use(express.static("/back"));
+
 app.use(express.json());
 app.use(
   cors({
     origin: "*",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 //routes
