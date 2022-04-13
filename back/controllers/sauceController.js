@@ -12,7 +12,7 @@ module.exports.setSauce = async (req, res) => {
     if (err) return res.sendStatus(403);
     userId = user.id;
   });
-  const imageUrl = req.file.path;
+  const imageUrl = "http://localhost:3000/" + req.file.path;
 
   try {
     await sauceModel.create({
@@ -48,40 +48,57 @@ module.exports.getSauceById = (req, res) => {
 };
 
 module.exports.updateSauce = async (req, res) => {
-  if (!ObjectID.isValid(req.params.id))
-    return res.status(400).send("ID unknown :" + req.params.id);
-  console.log(req.body);
-  const { name, manufacturer, description, mainPepper, heat } = req.body;
-  //const imageUrl = req.file.path;
-  try {
-    await sauceModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: name,
-        manufacturer: manufacturer,
-        description: description,
-        mainPepper: mainPepper,
-        heat: heat,
-        //imageUrl: imageUrl,
-      },
-      (err, data) => {
-        if (err) res.status(400).send(err);
-        else res.status(201).json({ message: "sauce mis a jour" });
-      }
-    );
-  } catch (err) {
-    res.status(400).send(err);
+  const _id = req.params._id;
+  if (!ObjectID.isValid(_id)) return res.status(400).send("ID unknown :" + _id);
+  if (req.file == null) {
+    const { name, manufacturer, description, mainPepper, heat } = req.body;
+
+    try {
+      await sauceModel.findOneAndUpdate(
+        { _id },
+        {
+          name: name,
+          manufacturer: manufacturer,
+          description: description,
+          mainPepper: mainPepper,
+          heat: heat,
+        }
+      );
+      res.status(201).json({ message: "sauce mis a jour" });
+    } catch (err) {
+      res.status(500).send("INTERNAL SERVER ERROR");
+    }
+  } else {
+    const imageUrl = "http://localhost:3000/" + req.file.path;
+    const sauce = JSON.parse(req.body.sauce);
+    const { name, manufacturer, description, mainPepper, heat } = sauce;
+    try {
+      await sauceModel.findOneAndUpdate(
+        { _id },
+        {
+          name: name,
+          manufacturer: manufacturer,
+          description: description,
+          mainPepper: mainPepper,
+          heat: heat,
+          imageUrl: imageUrl,
+        }
+      );
+      res.status(201).json({ message: "sauce mis a jour" });
+    } catch (err) {
+      res.status(500).send("INTERNAL SERVER ERROR");
+    }
   }
 };
 
 module.exports.deleteSauce = async (req, res) => {
-  if (!ObjectID.isValid(req.params.id))
-    return res.status(400).send("ID unknown :" + req.params.id);
+  const _id = req.params._id;
+  if (!ObjectID.isValid(_id)) return res.status(400).send("ID unknown :" + _id);
   try {
-    await sauceModel.deleteOne(req.params.id, function (err) {
-      if (!err) res.status(201).json({ message: "sauce supprimer" });
-    });
+    await sauceModel.deleteOne({ _id });
+    res.status(201).json({ message: "sauce supprimer" });
   } catch (err) {
-    res.status(400).send(err);
+    console.log(err);
+    res.status(500).send("INTERNAL SERVER ERROR");
   }
 };
