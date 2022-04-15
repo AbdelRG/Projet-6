@@ -27,7 +27,7 @@ module.exports.setSauce = async (req, res) => {
 
     res.status(201).json({ message: "sauce upload" });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(500).send("INTERNAL SERVER ERROR");
   }
 };
 
@@ -96,7 +96,7 @@ module.exports.deleteSauce = async (req, res) => {
   if (!ObjectID.isValid(_id)) return res.status(400).send("ID unknown :" + _id);
   try {
     await sauceModel.deleteOne({ _id });
-    res.status(201).json({ message: "sauce supprimer" });
+    res.status(204).json({ message: "sauce supprimer" });
   } catch (err) {
     console.log(err);
     res.status(500).send("INTERNAL SERVER ERROR");
