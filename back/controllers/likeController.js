@@ -20,7 +20,7 @@ module.exports.like = async (req, res) => {
     }
     sauce.save();
 
-    return res.status(201).json({ message: "sauce like" });
+    res.status(200).json({ message: "sauce like" });
   }
 
   if (like == -1 && !sauce.usersDisliked.includes(userId)) {
@@ -33,20 +33,20 @@ module.exports.like = async (req, res) => {
       sauce.usersLiked.splice(sauce.usersLiked.indexOf(userId), 1);
     }
     sauce.save();
-    res.status(201).json({ message: "sauce dislike" });
+    res.status(200).json({ message: "sauce dislike" });
   }
   if (like == 0) {
     if (sauce.usersDisliked.includes(userId)) {
       sauce.dislikes = sauce.dislikes - 1;
       sauce.usersDisliked.splice(sauce.usersDisliked.indexOf(userId), 1);
       sauce.save();
-      res.status(201).json({ message: " dislike retirer" });
+      res.status(200).json({ message: " dislike retirer" });
     }
     if (sauce.usersLiked.includes(userId)) {
       sauce.likes = sauce.likes - 1;
       sauce.usersLiked.splice(sauce.usersLiked.indexOf(userId), 1);
       sauce.save();
-      res.status(201).json({ message: " like retirer" });
+      res.status(200).json({ message: " like retirer" });
     }
   }
 };

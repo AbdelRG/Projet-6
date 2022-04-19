@@ -1,6 +1,5 @@
 const sauceModel = require("../models/sauceModel");
-const jwt = require("jsonwebtoken");
-const { json } = require("express");
+
 const ObjectID = require("mongoose").Types.ObjectId;
 
 module.exports.setSauce = async (req, res) => {
@@ -66,7 +65,7 @@ module.exports.updateSauce = async (req, res) => {
   }
   try {
     await sauceModel.findOneAndUpdate({ _id, userId }, payload);
-    res.status(201).json({ message: "sauce mis a jour" });
+    res.status(200).json({ message: "sauce mis a jour" });
   } catch (err) {
     res.status(500).send("INTERNAL SERVER ERROR");
   }

@@ -1,5 +1,5 @@
 const UserModel = require("../models/userModel");
-const { signUpErrors } = require("../utils/errorUtils");
+
 const jwt = require("jsonwebtoken");
 module.exports.signUp = async (req, res) => {
   const { email, password } = req.body;
@@ -9,8 +9,7 @@ module.exports.signUp = async (req, res) => {
 
     res.status(201).json({ message: "inscription reussi" });
   } catch (err) {
-    const errors = signUpErrors(err);
-    res.status(400).send({ errors });
+    res.status(500).send("INTERNAL SERVER ERROR");
   }
 };
 
@@ -27,6 +26,6 @@ module.exports.login = async (req, res) => {
 
     res.status(200).json({ userId: user._id, token: token });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).send("INTERNAL SERVER ERROR");
   }
 };
